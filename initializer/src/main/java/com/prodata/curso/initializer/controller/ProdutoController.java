@@ -6,9 +6,7 @@ import com.prodata.curso.initializer.repository.ProdutoRepository;
 import com.prodata.curso.initializer.service.ServicoProdutoCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,8 +23,10 @@ public class ProdutoController {
         return service;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ResponseEntity<List<Produto>> getList() {
-        return ResponseEntity.ok(getServico().getList());
+    @GetMapping
+    public ResponseEntity<List<Produto>> getList(@RequestParam String nome) {
+        return ResponseEntity.ok(getServico().getList(nome));
     }
+
+
 }

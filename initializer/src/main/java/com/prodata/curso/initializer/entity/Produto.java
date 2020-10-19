@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="TB_PRODUTO")
+@Table(name = "TB_PRODUTO")
 public class Produto implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -17,6 +17,8 @@ public class Produto implements Serializable {
     private BigDecimal valor;
     @Column(length = 2048)
     private String obs;
+    @Column(name = "obs_compra", columnDefinition = "TEXT")
+    private String obsCompra;
 
     public long getId() {
         return id;
@@ -49,4 +51,22 @@ public class Produto implements Serializable {
     public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
+
+    public String getObs() {
+        return obs;
+    }
+
+    public void setObs(String obs) {
+        this.obs = obs;
+    }
+
+    public String getObsCompra() {
+        return obsCompra;
+    }
+
+    public void setObsCompra(String obsCompra) {
+        this.obsCompra = obsCompra;
+    }
 }
+
+

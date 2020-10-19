@@ -17,4 +17,11 @@ public class ServicoProdutoCRUD {
         return produtoRepository.findAll();
     }
 
+    public List<Produto> getList(String textContains) {
+        if (textContains.isEmpty())
+            return getList();
+
+        return produtoRepository.findByNomeContainingIgnoreCase(textContains);
+    }
+
 }
