@@ -1,10 +1,10 @@
-package com.prodata.curso.initializer;
+package com.prodata.curso.starter;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class InitializerApplicationTests {
+class StarterApplicationTests {
 
 	@Test
 	void contextLoads() {

@@ -1,6 +1,6 @@
-package com.prodata.curso.initializer;
+package com.prodata.curso.starter;
 
-import comum.db.Conexao;
+import core.db.Conexao;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,17 +9,17 @@ import org.springframework.context.annotation.Bean;
 import java.sql.SQLException;
 
 @SpringBootApplication
-public class InitializerApplication {
+public class StarterApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(InitializerApplication.class, args);
+		SpringApplication.run(StarterApplication.class, args);
 	}
 
 	@Bean
 	public CommandLineRunner commandLineRunner() {
 		return args -> {
-			starterLogApp();
 			testConnectDb();
+			starterLogApp();
 		};
 	}
 
@@ -37,5 +37,4 @@ public class InitializerApplication {
 		System.out.println("-- PDCURSO - API Inicializada --");
 		System.out.println("--------------------------------");
 	}
-
 }

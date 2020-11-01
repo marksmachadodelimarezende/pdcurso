@@ -1,11 +1,13 @@
-package comum.db;
+package core.db;
 
-import org.jboss.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.Collections;
 
 public class Conexao {
+    private static final Logger logger = LoggerFactory.getLogger(ConexaoProperties.class);
     private Connection con;
 
     public Conexao() {
@@ -13,9 +15,9 @@ public class Conexao {
         try {
             Class.forName(conHelper.getDriver());
             con = DriverManager.getConnection(conHelper.getUrlJdbc(), conHelper.getUsername(), conHelper.getPassword());
-            Logger.getLogger(Conexao.class.getName()).log(Logger.Level.INFO, "Conect DB Success");
+            logger.info("Conect DB Success");
         } catch (ClassNotFoundException | SQLException e) {
-            Logger.getLogger(Conexao.class.getName()).log(Logger.Level.ERROR, "Error in conect db postgreSQL!", e);
+            logger.error("Error in conect db postgreSQL!", e);
         }
     }
 

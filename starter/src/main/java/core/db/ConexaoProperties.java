@@ -1,4 +1,4 @@
-package comum.db;
+package core.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 public class ConexaoProperties {
     private static final Logger logger = LoggerFactory.getLogger(ConexaoProperties.class);
-    private static final String CONEXAO_PROPERTIES = "src/main/java/comum/db/conexao.properties";
+    private static final String CONEXAO_PROPERTIES = "src/main/java/core/db/conexao.properties";
 
     protected ConexaoHelper getDataSource() {
         ConexaoHelper conexaoHelper = new ConexaoHelper();

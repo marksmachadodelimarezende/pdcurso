@@ -1,4 +1,4 @@
-package comum.db;
+package core.db;
 
 public class ConexaoHelper {
     private String driver;
