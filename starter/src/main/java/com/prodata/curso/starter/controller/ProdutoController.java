@@ -9,23 +9,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/produtoController")
 public class ProdutoController {
 
-    @Autowired
-    ProdutoRepository produtoRepository;
+//    @Autowired
+//    ProdutoRepository produtoRepository;
 
     private ServicoProdutoCRUD getServico() {
         ServicoProdutoCRUD service = SingletonFactory.getInstance(ServicoProdutoCRUD.class);
-        service.setProdutoRepository(produtoRepository);
+//        service.setProdutoRepository(produtoRepository);
         return service;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Produto>> getList(@RequestParam String nome) {
-        return ResponseEntity.ok(getServico().getList(nome));
+//    @GetMapping
+//    public ResponseEntity<List<Produto>> getList(@RequestParam String nome) {
+//        return ResponseEntity.ok(getServico().getList(nome));
+//    }
+
+    @GetMapping("getListaProdutos")
+    public ResponseEntity<List<Produto>> getListaProdutos() {
+        return ResponseEntity.ok(getServico().getListaProdutos());
     }
 
 
