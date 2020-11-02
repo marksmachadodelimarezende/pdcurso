@@ -1,17 +1,14 @@
 package com.prodata.curso.starter.entity;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Produto implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Produto  {
 
     private long id;
     private String nome;
     private BigDecimal quantidade;
     private BigDecimal valor;
     private String obs;
-    private String obsCompra;
 
     public long getId() {
         return id;
@@ -53,13 +50,6 @@ public class Produto implements Serializable {
         this.obs = obs;
     }
 
-    public String getObsCompra() {
-        return obsCompra;
-    }
-
-    public void setObsCompra(String obsCompra) {
-        this.obsCompra = obsCompra;
-    }
 }
 
 

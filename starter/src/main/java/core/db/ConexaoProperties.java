@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 
 public class ConexaoProperties {
     private static final Logger logger = LoggerFactory.getLogger(ConexaoProperties.class);
-    private static final String CONEXAO_PROPERTIES = "src/main/java/core/db/conexao.properties";
+    private static final String CONEXAO_PROPERTIES = "src/config/datasource.config";
 
     protected ConexaoHelper getDataSource() {
         ConexaoHelper conexaoHelper = new ConexaoHelper();
