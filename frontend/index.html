@@ -1,20 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="pdCurso">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <title>Hello Word</title>
-    <link
-            rel="stylesheet"
-            type="text/css"
-            href="lib/bootstrap/bootstrap.min.css"
-    />
+    <title>Curso AngularJs</title>
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="../node_modules/angular-material/angular-material.css" rel="stylesheet" type="text/css"/>
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css"/>
+
+    <!-- Imports de Scripts - Angular deve vir primeiro -->
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../node_modules/angular-aria/angular-aria.js"></script>
+    <script src="../node_modules/angular-animate/angular-animate.js"></script>
+    <script src="../node_modules/angular-messages/angular-messages.js"></script>
+    <script src="../node_modules/angular-material/angular-material.js"></script>
+    <script src="../node_modules/angular-locale-pt-br/angular-locale_pt-br.js"></script>
+    <script src="../node_modules/angular-route/angular-route.min.js"></script>
+
+    <!-- CSS -->
     <style>
         .jumbotron {
-            width: 500px;
+            width: 600px;
             text-align: center;
             margin-top: 10px;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        .jumbotron90Perc {
+            width: 95%;
+        }
+
+        .table {
+            margin-top: 5px;
         }
 
         .form-control {
@@ -24,6 +42,7 @@
         .btn {
             margin-top: 5px;
         }
+
         .selecionada {
             background-color: yellow;
         }
@@ -31,10 +50,12 @@
         .negrito {
             font-weight: bold;
         }
+
         .formInvalid {
             border-color: #721c24;
-            border-width: 1px;
+            border-width: 2px;
         }
+
         .contentAlertPanel {
             background-color: #f8d7da;
             width: auto;
@@ -44,127 +65,58 @@
             text-align: center;
             margin-top: 3px;
             margin-bottom: 3px;
+            border-radius: 3px;
+        }
+
+        .spacer {
+            display: flex;
+            flex: 1;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        h5 {
+            text-align: start;
+            padding-left: 10px;
         }
     </style>
-    <script src="lib/angular/angular.min.js"></script>
+
+    <!-- Scrip JS para criar module e controller do angular -->
     <script>
         //Aqui cria um modulo no Angular, que foi injetado dentro da tag "html"
-        var app = angular.module("pdCurso", []);
+        angular.module("pdCurso", ['ngMaterial', 'ngMessages', 'ngRoute']);
 
         //Aqui procura-se um modulo criado para injecao de controllers, services, diretivas ...
-        app.controller("pdCursoController", function ($scope) {
-            $scope.app = "PdCurso - AngularJs";
-            $scope.contatos = [
-                {nome: "Aluno 001", telefone: "818283845", operadora: "", selecionado: false},
-                {nome: "Aluno 002", telefone: "121314151", operadora: ""},
-            ];
-            $scope.operadoras = [
-                {codigo: 15, nome: "Vivo", categoria: "Móvel"},
-                {codigo: 41, nome: "TIM", categoria: "Móvel"},
-                {codigo: 14, nome: "Oi", categoria: "Móvel"},
-                {codigo: 21, nome: "Embratel", categoria: "Fixo"},
-            ];
-            /* Jeito de adicionar dados na grid não praticavel.
-                   Devemos sempre inserir dados no scope, dentro do scrip controller JS
-                   (MANTRA DE BOAS PRATICAS) */
-            // $scope.adicionarContato = function () {
-            //     $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone});
-            // }
+        //app.controller("AppController",
+        angular.module("pdCurso")
+            .controller("AppController",
+                function ($scope, $filter, uppercaseFilter, dateFilter) {
+                    $scope.app = "PdCurso - AngularJs";
 
-            $scope.adicionarContato = function (contato) {
-                $scope.contatos.push(angular.copy(contato));
-                delete $scope.contato;
-                $scope.contatoForm.$setPristine();
-            };
-
-            $scope.apagarContato = function (contatos) {
-                $scope.contatos = contatos.filter(function (contato) {
-                    if (!contato.selecionado) return contato;
+                    $scope.setMaximizedWindow = function (isMaximized) {
+                        $scope.isMaximizedWindow = isMaximized || false;
+                    };
                 });
-            };
-
-            $scope.isContatoSelecionado = function (contatos) {
-                return contatos.some(function (contato) {
-                    return contato.selecionado;
-                });
-            };
-        });
     </script>
 </head>
-<body ng-controller="pdCursoController">
-<div class="jumbotron">
-    <h4 ng-bind="app"></h4>
-    <table class="table" ng-show="contatos.length > 0">
-        <tr>
-            <th></th>
-            <th>Nome</th>
-            <th>Telefone</th>
-            <th>Operadora</th>
-        </tr>
-        <tr ng-class="{'selecionada negrito' : contato.selecionado}" ng-repeat="contato in contatos">
-            <td><input type="checkbox" ng-model="contato.selecionado"/></td>
-            <td>{{contato.nome}}</td>
-            <td>{{contato.telefone}}</td>
-            <td>{{contato.operadora}}</td>
-            <!--            <td ng-repeat="(key, value) in contato">-->
-            <!--                {{value}}-->
-            <!--            </td>-->
-        </tr>
-    </table>
+<body ng-app="pdCurso" ng-controller="AppController">
+<div class="jumbotron" ng-class="{'jumbotron90Perc': isMaximizedWindow}">
+    <div class="spacer">
+        <div>
+            <h5 ng-bind="app"></h5>
+        </div>
+        <div ng-click="setMaximizedWindow(!isMaximizedWindow)">
+            <i class="fa fa-arrows-h" title="Expandir tela"></i>
+        </div>
+    </div>
+    <div class="row" style="padding-left: 10px;">
+        <div><a href="contato">Contato</a></div>&nbsp;|&nbsp;
+        <div><a href="operadora">Operadora</a></div>
+    </div>
     <hr/>
-    <form name="contatoForm" style="margin-bottom: 5px;">
-<!--      É valido: {{contatoForm.$valid}}<br/>-->
-<!--      É invalido: {{contatoForm.$invalid}}<br/>-->
-        <input
-                class="form-control"
-                ng-class="{'formInvalid':contatoForm.nome.$invalid && contatoForm.nome.$dirty}"
-                type="text"
-                ng-required="true"
-                ng-model="contato.nome"
-                name="nome"
-                placeholder="Nome"/>
-        <div class="contentAlertPanel" ng-if="contatoForm.nome.$invalid && contatoForm.nome.$dirty">
-            Por favor, informe o campo nome!
-        </div>
-        <input
-                class="form-control"
-                ng-class="{'formInvalid':contatoForm.telefone.$invalid && contatoForm.telefone.$dirty}"
-                type="text"
-                ng-required="true"
-                ng-model="contato.telefone"
-                name="telefone"
-                placeholder="Telefone"/>
-        <div class="contentAlertPanel" ng-if="contatoForm.telefone.$invalid && contatoForm.telefone.$dirty">
-            Por favor, informe o campo telefone!
-        </div>
-        <select
-                class="form-control"
-                ng-class="{'formInvalid':contatoForm.operadora.$invalid && contatoForm.operadora.$dirty}"
-                ng-model="contato.operadora"
-                name="operadora"
-                ng-required="true"
-                ng-options="operadora.nome as operadora.nome group by operadora.categoria for operadora in operadoras">
-            <option value="">Selecione uma operadora</option>
-        </select>
-        <div class="contentAlertPanel" ng-if="contatoForm.operadora.$invalid && contatoForm.operadora.$dirty" >
-            Por favor, informe o campo operadora!
-        </div>
-    </form>
-    <button
-            class="btn btn-primary btn-block"
-            ng-click="adicionarContato(contato)"
-            ng-disabled="contatoForm.$invalid">
-        Adicionar
-    </button>
-    <button
-            class="btn btn-danger btn-block"
-            ng-click="apagarContato(contatos)"
-            ng-if="isContatoSelecionado(contatos)"
-    >
-        Apagar
-    </button>
+    <div ng-view></div>
 </div>
-
-<div ng-include="'app/footer.html'">%%</div>
+<div ng-include="'app/footer.html'"></div>
 </body>
+
 </html>
