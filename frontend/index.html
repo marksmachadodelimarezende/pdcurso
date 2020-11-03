@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Curso AngularJs</title>
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="../node_modules/angular-material/angular-material.css" rel="stylesheet" type="text/css"/>
-    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="node_modules/angular-material/angular-material.css" rel="stylesheet" type="text/css"/>
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css"/>
 
     <!-- Imports de Scripts - Angular deve vir primeiro -->
-    <script src="../node_modules/angular/angular.js"></script>
-    <script src="../node_modules/angular-aria/angular-aria.js"></script>
-    <script src="../node_modules/angular-animate/angular-animate.js"></script>
-    <script src="../node_modules/angular-messages/angular-messages.js"></script>
-    <script src="../node_modules/angular-material/angular-material.js"></script>
-    <script src="../node_modules/angular-locale-pt-br/angular-locale_pt-br.js"></script>
-    <script src="../node_modules/angular-route/angular-route.min.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular-aria/angular-aria.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.js"></script>
+    <script src="node_modules/angular-messages/angular-messages.js"></script>
+    <script src="node_modules/angular-material/angular-material.js"></script>
+    <script src="node_modules/angular-locale-pt-br/angular-locale_pt-br.js"></script>
+    <script src="node_modules/angular-route/angular-route.js"></script>
 
     <!-- CSS -->
     <style>
@@ -84,20 +84,20 @@
     <!-- Scrip JS para criar module e controller do angular -->
     <script>
         //Aqui cria um modulo no Angular, que foi injetado dentro da tag "html"
-        angular.module("pdCurso", ['ngMaterial', 'ngMessages', 'ngRoute']);
+        var app = angular.module("pdCurso", ['ngMaterial', 'ngMessages', 'ngRoute']);
 
         //Aqui procura-se um modulo criado para injecao de controllers, services, diretivas ...
         //app.controller("AppController",
-        angular.module("pdCurso")
-            .controller("AppController",
-                function ($scope, $filter, uppercaseFilter, dateFilter) {
-                    $scope.app = "PdCurso - AngularJs";
+        app.controller("AppController",
+            function ($scope, $filter, uppercaseFilter, dateFilter) {
+                $scope.app = "PdCurso - AngularJs";
 
-                    $scope.setMaximizedWindow = function (isMaximized) {
-                        $scope.isMaximizedWindow = isMaximized || false;
-                    };
-                });
+                $scope.setMaximizedWindow = function (isMaximized) {
+                    $scope.isMaximizedWindow = isMaximized || false;
+                };
+            });
     </script>
+    <script src="app/routes/routes.js"></script>
 </head>
 <body ng-app="pdCurso" ng-controller="AppController">
 <div class="jumbotron" ng-class="{'jumbotron90Perc': isMaximizedWindow}">
@@ -109,9 +109,10 @@
             <i class="fa fa-arrows-h" title="Expandir tela"></i>
         </div>
     </div>
-    <div class="row" style="padding-left: 10px;">
-        <div><a href="contato">Contato</a></div>&nbsp;|&nbsp;
-        <div><a href="operadora">Operadora</a></div>
+    <div class="row" style="padding-left: 25px;">
+        <div><a href="#!contato">Contato</a></div>
+        &nbsp;|&nbsp;
+        <div><a href="#!operadora">Operadora</a></div>
     </div>
     <hr/>
     <div ng-view></div>
