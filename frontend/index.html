@@ -96,8 +96,69 @@
                     $scope.isMaximizedWindow = isMaximized || false;
                 };
             });
+
+        angular.module("pdCurso").controller("ContatoController", ContatoController);
+
+        function ContatoController($scope, $filter, uppercaseFilter, dateFilter) {
+            $scope.app = "PdCurso - AngularJs";
+            $scope.contatos = [
+                {nome: $filter('uppercase')("Pedro"), telefone: "818283845", data: dateFilter(new Date(), 'dd/MM/yyyy'), operadora: "TIM", selecionado: false},
+                {nome: uppercaseFilter("Laura"), telefone: "121314151", data: dateFilter(new Date(), 'dd/MM/yyyy'), operadora: "Vivo"},
+            ];
+            $scope.operadoras = [
+                {codigo: 15, nome: "Vivo", categoria: "Móvel", preco: 1111},
+                {codigo: 41, nome: "TIM", categoria: "Móvel", preco: 0.5},
+                {codigo: 14, nome: "Oi", categoria: "Móvel", preco: 1.2},
+                {codigo: 21, nome: "Embratel", categoria: "Fixo", preco: 0.35},
+            ];
+
+            /* Jeito de adicionar dados na grid não praticavel.
+                   Devemos sempre inserir dados no scope, dentro do scrip controller JS
+                   (MANTRA DE BOAS PRATICAS) */
+            // $scope.adicionarContato = function () {
+            //     $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone});
+            // }
+
+            $scope.setMaximizedWindow = function (isMaximized) {
+                $scope.isMaximizedWindow = isMaximized || false;
+            };
+            $scope.adicionarContato = function (contato) {
+                $scope.contatos.push(angular.copy(contato));
+                delete $scope.contato;
+                $scope.contatoForm.$setPristine();
+            };
+            $scope.alterarContato = function (contato) {
+                console.log('Alterando', contato);
+            };
+            $scope.editarContato = function (contato) {
+                $scope.contato = angular.copy(contato);
+                $scope.isEditandoRegistro = true;
+            };
+            $scope.apagarContatos = function (contatos) {
+                $scope.contatos = contatos.filter(function (contato) {
+                    if (!contato.selecionado) return contato;
+                });
+            };
+            $scope.excluirContato = function (contato) {
+                contato.selecionado = true;
+                $scope.apagarContatos($scope.contatos);
+            };
+            $scope.isContatoSelecionado = function (contatos) {
+                return contatos.some(function (contato) {
+                    return contato.selecionado;
+                });
+            };
+            $scope.ordenarTabelaPor = function (campo) {
+                $scope.criterioOrdenacao = campo;
+                $scope.criterioReverse = !$scope.criterioReverse;
+
+            };
+            $scope.limparForm = function () {
+                delete $scope.contato;
+                $scope.isEditandoRegistro = false;
+            };
+        }
     </script>
-    <script src="app/routes/routes.js"></script>
 </head>
 <body ng-app="pdCurso" ng-controller="AppController">
 <div class="jumbotron" ng-class="{'jumbotron90Perc': isMaximizedWindow}">
@@ -109,13 +170,114 @@
             <i class="fa fa-arrows-h" title="Expandir tela"></i>
         </div>
     </div>
-    <div class="row" style="padding-left: 25px;">
-        <div><a href="#!contato">Contato</a></div>
-        &nbsp;|&nbsp;
-        <div><a href="#!operadora">Operadora</a></div>
-    </div>
     <hr/>
-    <div ng-view></div>
+    <div ng-controller="ContatoController">
+        <form name="contatoForm" style="margin-bottom: 5px;">
+            <!--      É valido: {{contatoForm.$valid}}<br/>-->
+            <!--      É invalido: {{contatoForm.$invalid}}<br/>-->
+            <input
+                    class="form-control"
+                    ng-class="{'formInvalid':contatoForm.nome.$invalid && contatoForm.nome.$dirty}"
+                    type="text"
+                    ng-required="true"
+                    ng-model="contato.nome"
+                    name="nome"
+                    placeholder="Nome"/>
+            <div class="contentAlertPanel" ng-if="contatoForm.nome.$invalid">
+                Por favor, informe o campo nome!
+            </div>
+            <input
+                    class="form-control"
+                    ng-class="{'formInvalid':contatoForm.telefone.$invalid && contatoForm.telefone.$dirty}"
+                    type="text"
+                    ng-required="true"
+                    ng-model="contato.telefone"
+                    name="telefone"
+                    placeholder="Telefone"/>
+            <div class="contentAlertPanel" ng-if="contatoForm.telefone.$invalid">
+                Por favor, informe o campo telefone!
+            </div>
+            <select
+                    class="form-control"
+                    ng-class="{'formInvalid':contatoForm.operadora.$invalid && contatoForm.operadora.$dirty}"
+                    ng-model="contato.operadora"
+                    name="operadora"
+                    ng-required="true"
+                    ng-options="operadora.nome as operadora.nome + ' (' + (operadora.preco | currency) + ')'
+                group
+                by
+                operadora.categoria
+                for
+                operadora in operadoras">
+                <option value="">Selecione uma operadora</option>
+            </select>
+            <div class="contentAlertPanel" ng-if="contatoForm.operadora.$invalid">
+                Por favor, informe o campo operadora!
+            </div>
+            <button
+                    class="btn btn-primary btn-block"
+                    ng-click="adicionarContato(contato)"
+                    ng-if="!isEditandoRegistro"
+                    ng-disabled="contatoForm.$invalid">
+                Adicionar
+            </button>
+            <button
+                    class="btn btn-primary btn-block"
+                    ng-click="alterarContato(contato)"
+                    ng-if="isEditandoRegistro"
+                    ng-disabled="contatoForm.$invalid">
+                Alterar
+            </button>
+            <button
+                    class="btn btn-primary btn-warning btn-block"
+                    ng-click="limparForm()">
+                Limpar
+            </button>
+            <button
+                    class="btn btn-danger btn-block"
+                    ng-click="apagarContatos(contatos)"
+                    ng-if="isContatoSelecionado(contatos)">
+                Apagar
+            </button>
+        </form>
+        <table class="table" ng-show="contatos.length > 0">
+            <tr>
+                <th></th>
+                <th><a href="" ng-click="ordenarTabelaPor('nome')">Nome</a></th>
+                <th><a href="" ng-click="ordenarTabelaPor('telefone')">Telefone</a></th>
+                <th><a href="" ng-click="ordenarTabelaPor('operadora')">Operadora</a></th>
+                <th><a href="" ng-click="ordenarTabelaPor('data')">Data</a></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                <td colspan="7">
+                    <input class="form-control" type="text" ng-model="filtroTabela" placeholder="Filtrar na tabela"/>
+                </td>
+            </tr>
+            <tr ng-class="{'selecionada negrito' : contato.selecionado}"
+                ng-repeat="contato in contatos | filter:{nome: filtroTabela} | orderBy:criterioOrdenacao:criterioReverse">
+                <td><input type="checkbox" ng-model="contato.selecionado"/></td>
+                <td>{{contato.nome}}</td>
+                <td>{{contato.telefone}}</td>
+                <td>{{contato.operadora}}</td>
+                <td>{{contato.data}}</td>
+                <td>
+                <span style="color: cornflowerblue" title="Editar" ng-click="editarContato(contato)">
+                    <i class="fa fa-pencil"></i>
+                </span>
+                </td>
+                <td>
+                <span style="color: darkred" title="Excluir" ng-click="excluirContato(contato)">
+                    <i class="fa fa-trash"></i>
+                </span>
+                </td>
+                <!--            <td ng-repeat="(key, value) in contato">-->
+                <!--                {{value}}-->
+                <!--            </td>-->
+            </tr>
+        </table>
+    </div>
 </div>
 <div ng-include="'app/footer.html'"></div>
 </body>
