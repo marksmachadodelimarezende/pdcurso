@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/produtoController")
+@RequestMapping(value = "produtoController")
 public class ProdutoController {
 
     @GetMapping("getListaProdutos")
