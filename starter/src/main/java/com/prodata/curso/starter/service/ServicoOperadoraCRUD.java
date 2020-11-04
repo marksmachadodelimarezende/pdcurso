@@ -1,7 +1,6 @@
 package com.prodata.curso.starter.service;
 
 import com.prodata.curso.starter.entity.Operadora;
-import com.prodata.curso.starter.entity.Produto;
 import core.db.Conexao;
 
 import java.sql.ResultSet;
@@ -35,7 +34,7 @@ public class ServicoOperadoraCRUD {
     public List<Operadora> getList() {
         List<Operadora> operadoras = new ArrayList<>();
         try {
-            ResultSet rs = new Conexao().consultaSql(SELECT_FROM_PUBLIC_OPERADORA.concat(ORDER_BY_ID));
+            ResultSet rs = Conexao.consultaSql(SELECT_FROM_PUBLIC_OPERADORA.concat(ORDER_BY_ID));
             while (rs.next()) {
                 operadoras.add(getItemRow(rs));
             }
@@ -64,7 +63,7 @@ public class ServicoOperadoraCRUD {
         validaCampoObrigatorio(operadora);
         String msgReturn = "Nenhum registro afetado!";
         String sql = "Delete from public.operadora ".concat(getSintaxeWhereId(operadora));
-        int qtdeRow = new Conexao().executaSql(sql);
+        int qtdeRow = Conexao.executaSql(sql);
         if (qtdeRow > 0)
             msgReturn = "Exclusão realizada com sucesso!";
 
@@ -91,7 +90,7 @@ public class ServicoOperadoraCRUD {
     private Operadora execSqlDbGetOperadora(String sql) {
         Operadora operadora = new Operadora();
         try {
-            ResultSet rs = new Conexao().consultaSql(sql);
+            ResultSet rs = Conexao.consultaSql(sql);
             rs.next();
             operadora = getItemRow(rs);
         } catch (SQLException e) {

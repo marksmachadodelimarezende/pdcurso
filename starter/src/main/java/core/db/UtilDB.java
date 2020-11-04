@@ -1,7 +1,5 @@
-package com.prodata.curso.starter.service;
+package core.db;
 
-import core.db.Conexao;
-import core.db.ConexaoProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +10,7 @@ public class UtilDB extends Conexao {
 
     private static final Logger logger = LoggerFactory.getLogger(UtilDB.class);
 
-    public ResultSet getRegistro(String sql) throws SQLException {
+    public static ResultSet getRegistro(String sql) throws SQLException {
         try {
             ResultSet rs = consultaSql(sql);
             rs.next();
@@ -22,9 +20,5 @@ public class UtilDB extends Conexao {
             logger.error(err, e);
             throw new SQLException(err);
         }
-    }
-
-    public int executarSql (String sql) {
-        return executaSql(sql);
     }
 }

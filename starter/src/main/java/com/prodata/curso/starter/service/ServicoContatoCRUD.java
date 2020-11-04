@@ -1,70 +1,69 @@
 package com.prodata.curso.starter.service;
 
-import com.prodata.curso.starter.entity.Operadora;
-import com.prodata.curso.starter.entity.Produto;
-import core.db.Conexao;
+import com.prodata.curso.starter.entity.Contato;
+import core.db.UtilDB;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicoOperadoraCRUD {
+public class ServicoContatoCRUD extends UtilDB {
 
-    private static final String RETURNIG = "returning *";
-    public static final String SELECT_FROM_PUBLIC_OPERADORA = "select * from public.operadora";
+    public static final String SELECT_FROM_PUBLIC_CONTATO = "select * from public.contato";
     public static final String ORDER_BY_ID = " Order by id";
+    private static final String RETURNIG = "returning *";
 
     //Create
-    public Operadora create(Operadora operadora){
-        String sql = "insert into public.operadora (ddd, nome, categoria) \nvalues ("
-                .concat(operadora.getDdd()).concat(", ")
-                .concat("'").concat(operadora.getNome()).concat("', ")
-                .concat("'").concat(String.valueOf(operadora.getCategoria())).concat("' ")
+    public Contato create(Contato contato) {
+        String sql = "insert into public.contato (nome, telefone, id_operadora) \nvalues ("
+                .concat("'").concat(contato.getNome()).concat("', ")
+                .concat("'").concat(contato.getTelefone()).concat("', ")
+                .concat("'").concat(String.valueOf(contato.getIdOperadora())).concat("' ")
                 .concat(") \n")
                 .concat(RETURNIG);
 
-        return execSqlDbGetOperadora(sql);
+        return execSqlDbGetContato(sql);
     }
 
-    //Read (select) >> getList | getOperadora(id)
-    public Operadora getOperadora(long id) {
-        return execSqlDbGetOperadora(SELECT_FROM_PUBLIC_OPERADORA.concat(" ").concat(getSintaxeWhereId(id)));
+    //Read (select) >> getList | getId(id)
+    public Contato getId(long id) {
+        return execSqlDbGetContato(SELECT_FROM_PUBLIC_CONTATO.concat(" ").concat(getSintaxeWhereId(id)));
     }
 
-    public List<Operadora> getList() {
-        List<Operadora> operadoras = new ArrayList<>();
+    public List<Contato> getList() {
+        List<Contato> contatos = new ArrayList<>();
         try {
-            ResultSet rs = new Conexao().consultaSql(SELECT_FROM_PUBLIC_OPERADORA.concat(ORDER_BY_ID));
+            ResultSet rs = consultaSql(SELECT_FROM_PUBLIC_CONTATO.concat(ORDER_BY_ID));
             while (rs.next()) {
-                operadoras.add(getItemRow(rs));
+                contatos.add(getItemRow(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return operadoras;
+        return contatos;
     }
 
     //Update
-    public Operadora update(Operadora operadora) throws Exception {
-        validaCampoObrigatorio(operadora);
+    public Contato update(Contato contato) throws Exception {
+        validaCampoObrigatorio(contato);
 
-        String sql = "update public.operadora set \n"
-                .concat("\tddd = '").concat(operadora.getDdd()).concat("', \n")
-                .concat("\tnome = '").concat(operadora.getNome()).concat("', \n")
-                .concat("\tcategoria = '").concat(String.valueOf(operadora.getCategoria())).concat("' \n")
-                .concat(getSintaxeWhereId(operadora)).concat("\n")
+        String sql = "update public.contato set \n"
+                .concat("\tnome = '").concat(contato.getNome()).concat("', \n")
+                .concat("\ttelefone = '").concat(contato.getTelefone()).concat("', \n")
+                .concat("\tid_operadora = ").concat(String.valueOf(contato.getIdOperadora())).concat(" \n")
+                .concat(getSintaxeWhereId(contato)).concat("\n")
                 .concat(RETURNIG);
 
-        return execSqlDbGetOperadora(sql);
+        return execSqlDbGetContato(sql);
     }
 
     //Delete
-    public String delete(Operadora operadora) throws Exception {
-        validaCampoObrigatorio(operadora);
+    public String delete(Contato contato) throws Exception {
+        validaCampoObrigatorio(contato);
         String msgReturn = "Nenhum registro afetado!";
-        String sql = "Delete from public.operadora ".concat(getSintaxeWhereId(operadora));
-        int qtdeRow = new Conexao().executaSql(sql);
+        String sql = "Delete from public.Contato ".concat(getSintaxeWhereId(contato));
+        int qtdeRow = executaSql(sql);
         if (qtdeRow > 0)
             msgReturn = "Exclusão realizada com sucesso!";
 
@@ -72,51 +71,50 @@ public class ServicoOperadoraCRUD {
     }
 
     public String deleteId(long id) throws Exception {
-        Operadora operadora = new Operadora();
-        operadora.setId(id);
-        return delete(operadora);
+        Contato Contato = new Contato();
+        Contato.setId(id);
+        return delete(Contato);
     }
 
     //Methods resusable
     private String getSintaxeWhereId(long id) {
-        Operadora operadora = new Operadora();
-        operadora.setId(id);
-        return getSintaxeWhereId(operadora);
+        Contato contato = new Contato();
+        contato.setId(id);
+        return getSintaxeWhereId(contato);
     }
 
-    private String getSintaxeWhereId(Operadora operadora) {
-        return "where id = ".concat(String.valueOf(operadora.getId()));
+    private String getSintaxeWhereId(Contato contato) {
+        return "where id = ".concat(String.valueOf(contato.getId()));
     }
 
-    private Operadora execSqlDbGetOperadora(String sql) {
-        Operadora operadora = new Operadora();
+    private Contato execSqlDbGetContato(String sql) {
+        Contato contato = new Contato();
         try {
-            ResultSet rs = new Conexao().consultaSql(sql);
-            rs.next();
-            operadora = getItemRow(rs);
+            contato = getItemRow(getRegistro(sql));
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return operadora;
+        return contato;
     }
 
-    private Operadora getItemRow(ResultSet rs) throws SQLException {
-        Operadora operadora = new Operadora();
+    private Contato getItemRow(ResultSet rs) throws SQLException {
+        Contato contato = new Contato();
 
         if (rs == null || rs.getRow() == 0) {
-            return operadora;
+            return contato;
         }
 
-        operadora.setId(rs.getInt("id"));
-        operadora.setNome(rs.getString("nome"));
-        operadora.setDdd(rs.getString("ddd"));
-        operadora.setCategoria(rs.getInt("categoria"));
-        return operadora;
+        contato.setId(rs.getInt("id"));
+        contato.setNome(rs.getString("nome"));
+        contato.setTelefone(rs.getString("telefone"));
+        contato.setIdOperadora(rs.getInt("id_operadora"));
+        contato.setDataInclusao(rs.getDate("data_inclusao"));
+        return contato;
     }
 
     //Methods validete
-    private void validaCampoObrigatorio(Operadora operadora) throws Exception {
-        if (operadora.getId() <= 0)
+    private void validaCampoObrigatorio(Contato contato) throws Exception {
+        if (contato.getId() <= 0)
             throw new Exception("Identificador do registro não informado para CRUD do registro!");
     }
 

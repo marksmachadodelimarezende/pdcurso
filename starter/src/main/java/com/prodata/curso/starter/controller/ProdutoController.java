@@ -5,6 +5,7 @@ import com.prodata.curso.starter.service.ServicoProdutoCRUD;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController
@@ -12,7 +13,7 @@ import java.util.List;
 public class ProdutoController {
 
     @GetMapping("getListaProdutos")
-    public ResponseEntity<List<Produto>> getListaProdutos() {
+    public ResponseEntity<List<Produto>> getListaProdutos() throws SQLException {
         return ResponseEntity.ok(new ServicoProdutoCRUD().getListaProdutos());
     }
 

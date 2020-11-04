@@ -2,13 +2,14 @@ package com.prodata.curso.starter.service;
 
 import com.prodata.curso.starter.entity.Produto;
 import core.db.Conexao;
+import core.db.UtilDB;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicoProdutoCRUD {
+public class ServicoProdutoCRUD extends UtilDB {
 
     private void validaCampoObrigatorio(Produto produto) throws Exception {
         if (produto.getId() <= 0)
@@ -40,10 +41,10 @@ public class ServicoProdutoCRUD {
         return produto;
     }
 
-    public List<Produto> getListaProdutos() {
+    public List<Produto> getListaProdutos() throws SQLException {
         List<Produto> retorno = new ArrayList<>();
         String sql = "Select * from produto";
-        ResultSet rs = new Conexao().consultaSql(sql);
+        ResultSet rs = consultaSql(sql);
         try {
             while (rs.next()) {
                 Produto produto = getItemProduto(rs);

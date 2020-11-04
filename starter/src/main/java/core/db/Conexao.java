@@ -8,7 +8,7 @@ import java.util.Collections;
 
 public class Conexao {
     private static final Logger logger = LoggerFactory.getLogger(ConexaoProperties.class);
-    private Connection con;
+    private static Connection con;
 
     public Conexao() {
         ConexaoHelper conHelper = new ConexaoProperties().getDataSource();
@@ -21,11 +21,11 @@ public class Conexao {
         }
     }
 
-    public Connection getCon() {
+    public static Connection getCon() {
         return con;
     }
 
-    public int executaSql(String sql){
+    public static int executaSql(String sql){
         try (Statement statement = con.createStatement()) {
             return statement.executeUpdate(sql);
         } catch (SQLException e) {
@@ -34,12 +34,11 @@ public class Conexao {
         }
     }
 
-    public ResultSet consultaSql(String sql) {
+    public static ResultSet consultaSql(String sql) throws SQLException {
         try(Statement stm = con.createStatement()) {
             return stm.executeQuery(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
-            return (ResultSet) Collections.emptyList();
+            throw new SQLException(e);
         }
     }
 }
