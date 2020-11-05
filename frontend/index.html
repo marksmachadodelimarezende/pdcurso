@@ -86,25 +86,51 @@
         //Aqui cria um modulo no Angular, que foi injetado dentro da tag "html"
         var app = angular.module("pdCurso", ['ngMaterial', 'ngMessages', 'ngRoute']);
 
-        //Aqui procura-se um modulo criado para injecao de controllers, services, diretivas ...
-        //app.controller("AppController",
-        app.controller("AppController",
-            function ($scope, $filter, uppercaseFilter, dateFilter) {
+        app.service("HttpService", function ($http) {
+            var vm = this;
+            var server = "localhost";
+            var portServer = "8080";
+            var urlBase = "http://"+server+":"+portServer;
+
+            vm.get = get;
+            vm.remove = remove;
+
+            function getEndPoint(controller) {
+                return urlBase + (controller.startsWith("/") ? controller : "/"+controller);
+            }
+
+            function get(controller, queryStringParams) {
+                return $http.get(getEndPoint(controller));
+            }
+
+            function remove(controller, bodyJson) {
+                return $http.delete(getEndPoint(controller), bodyJson);
+            }
+
+
+        });
+
+        app.controller("AppController", function ($scope, $filter, uppercaseFilter, dateFilter) {
                 $scope.app = "PdCurso - AngularJs";
 
                 $scope.setMaximizedWindow = function (isMaximized) {
                     $scope.isMaximizedWindow = isMaximized || false;
                 };
+
+                iniciar();
+                function iniciar() {
+                    $scope.setMaximizedWindow(true);
+                }
             });
 
+        //Aqui procura-se um modulo criado para injecao de controllers, services, diretivas ...
         angular.module("pdCurso").controller("ContatoController", ContatoController);
-
-        function ContatoController($scope, $filter, uppercaseFilter, dateFilter) {
+        function ContatoController($scope, $http, $filter, uppercaseFilter, dateFilter, HttpService) {
             $scope.app = "PdCurso - AngularJs";
-            $scope.contatos = [
-                {nome: $filter('uppercase')("Pedro"), telefone: "818283845", data: dateFilter(new Date(), 'dd/MM/yyyy'), operadora: "TIM", selecionado: false},
-                {nome: uppercaseFilter("Laura"), telefone: "121314151", data: dateFilter(new Date(), 'dd/MM/yyyy'), operadora: "Vivo"},
-            ];
+            // $scope.contatos = [
+            //     {nome: $filter('uppercase')("Pedro"), telefone: "818283845", data: dateFilter(new Date(), 'dd/MM/yyyy'), operadora: "TIM", selecionado: false},
+            //     {nome: uppercaseFilter("Laura"), telefone: "121314151", data: dateFilter(new Date(), 'dd/MM/yyyy'), operadora: "Vivo"},
+            // ];
             $scope.operadoras = [
                 {codigo: 15, nome: "Vivo", categoria: "Móvel", preco: 1111},
                 {codigo: 41, nome: "TIM", categoria: "Móvel", preco: 0.5},
@@ -112,16 +138,22 @@
                 {codigo: 21, nome: "Embratel", categoria: "Fixo", preco: 0.35},
             ];
 
+            $scope.contatos = [];
+
+            var pesquisarContatos = function() {
+                HttpService.get("contatoController")
+                .then(function (result) {
+                    $scope.contatos = result.data;
+                });
+            }
+
             /* Jeito de adicionar dados na grid não praticavel.
-                   Devemos sempre inserir dados no scope, dentro do scrip controller JS
-                   (MANTRA DE BOAS PRATICAS) */
+                       Devemos sempre inserir dados no scope, dentro do scrip controller JS
+                       (MANTRA DE BOAS PRATICAS) */
             // $scope.adicionarContato = function () {
             //     $scope.contatos.push({nome: $scope.nome, telefone: $scope.telefone});
             // }
 
-            $scope.setMaximizedWindow = function (isMaximized) {
-                $scope.isMaximizedWindow = isMaximized || false;
-            };
             $scope.adicionarContato = function (contato) {
                 $scope.contatos.push(angular.copy(contato));
                 delete $scope.contato;
@@ -135,8 +167,13 @@
                 $scope.isEditandoRegistro = true;
             };
             $scope.apagarContatos = function (contatos) {
-                $scope.contatos = contatos.filter(function (contato) {
-                    if (!contato.selecionado) return contato;
+                contatos.filter(function (contato) {
+                    if (contato.selecionado) {
+                        HttpService.remove("contatoController/deleteId?id="+contato.id)
+                        .then(function (result) {
+                            pesquisarContatos();
+                        });
+                    }
                 });
             };
             $scope.excluirContato = function (contato) {
@@ -157,6 +194,11 @@
                 delete $scope.contato;
                 $scope.isEditandoRegistro = false;
             };
+
+            iniciar();
+            function iniciar() {
+                pesquisarContatos();
+            }
         }
     </script>
 </head>
@@ -246,7 +288,7 @@
                 <th><a href="" ng-click="ordenarTabelaPor('nome')">Nome</a></th>
                 <th><a href="" ng-click="ordenarTabelaPor('telefone')">Telefone</a></th>
                 <th><a href="" ng-click="ordenarTabelaPor('operadora')">Operadora</a></th>
-                <th><a href="" ng-click="ordenarTabelaPor('data')">Data</a></th>
+                <th><a href="" ng-click="ordenarTabelaPor('data inclusão')">Data</a></th>
                 <th></th>
                 <th></th>
             </tr>
@@ -261,7 +303,7 @@
                 <td>{{contato.nome}}</td>
                 <td>{{contato.telefone}}</td>
                 <td>{{contato.operadora}}</td>
-                <td>{{contato.data}}</td>
+                <td>{{contato.dataInclusao | date:'dd/MM/yyyy HH:mm'}}</td>
                 <td>
                 <span style="color: cornflowerblue" title="Editar" ng-click="editarContato(contato)">
                     <i class="fa fa-pencil"></i>
@@ -278,6 +320,7 @@
             </tr>
         </table>
     </div>
+
 </div>
 <div ng-include="'app/footer.html'"></div>
 </body>
