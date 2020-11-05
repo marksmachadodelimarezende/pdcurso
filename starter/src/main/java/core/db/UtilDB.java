@@ -10,7 +10,7 @@ public class UtilDB extends Conexao {
 
     private static final Logger logger = LoggerFactory.getLogger(UtilDB.class);
 
-    public static ResultSet getRegistro(String sql) throws SQLException {
+    public ResultSet getRegistro(String sql) throws SQLException {
         try {
             ResultSet rs = consultaSql(sql);
             rs.next();

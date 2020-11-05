@@ -4,11 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.Collections;
 
 public class Conexao {
     private static final Logger logger = LoggerFactory.getLogger(ConexaoProperties.class);
-    private static Connection con;
+    private Connection con;
 
     public Conexao() {
         ConexaoHelper conHelper = new ConexaoProperties().getDataSource();
@@ -21,11 +20,11 @@ public class Conexao {
         }
     }
 
-    public static Connection getCon() {
+    public Connection getCon() {
         return con;
     }
 
-    public static int executaSql(String sql){
+    public int executaSql(String sql){
         try (Statement statement = con.createStatement()) {
             return statement.executeUpdate(sql);
         } catch (SQLException e) {
@@ -34,7 +33,7 @@ public class Conexao {
         }
     }
 
-    public static ResultSet consultaSql(String sql) throws SQLException {
+    public ResultSet consultaSql(String sql) throws SQLException {
         try(Statement stm = con.createStatement()) {
             return stm.executeQuery(sql);
         } catch (SQLException e) {

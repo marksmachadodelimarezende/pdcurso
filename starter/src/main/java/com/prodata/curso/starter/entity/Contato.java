@@ -1,13 +1,15 @@
 package com.prodata.curso.starter.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Contato {
     private long id;
     private String nome;
     private String telefone;
-    private Date dataInclusao;
+    private Timestamp dataInclusao;
     private long idOperadora;
+    private String operadora;
 
     public long getId() {
         return id;
@@ -33,11 +35,11 @@ public class Contato {
         this.telefone = telefone;
     }
 
-    public Date getDataInclusao() {
+    public Timestamp getDataInclusao() {
         return dataInclusao;
     }
 
-    public void setDataInclusao(Date dataInclusao) {
+    public void setDataInclusao(Timestamp dataInclusao) {
         this.dataInclusao = dataInclusao;
     }
 
@@ -47,5 +49,13 @@ public class Contato {
 
     public void setIdOperadora(long idOperadora) {
         this.idOperadora = idOperadora;
+    }
+
+    public String getOperadora() {
+        return operadora;
+    }
+
+    public void setOperadora(String operadora) {
+        this.operadora = operadora;
     }
 }

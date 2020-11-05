@@ -2,13 +2,14 @@ package com.prodata.curso.starter.service;
 
 import com.prodata.curso.starter.entity.Operadora;
 import core.db.Conexao;
+import core.db.UtilDB;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicoOperadoraCRUD {
+public class ServicoOperadoraCRUD extends UtilDB {
 
     private static final String RETURNIG = "returning *";
     public static final String SELECT_FROM_PUBLIC_OPERADORA = "select * from public.operadora";
@@ -34,7 +35,7 @@ public class ServicoOperadoraCRUD {
     public List<Operadora> getList() {
         List<Operadora> operadoras = new ArrayList<>();
         try {
-            ResultSet rs = Conexao.consultaSql(SELECT_FROM_PUBLIC_OPERADORA.concat(ORDER_BY_ID));
+            ResultSet rs = consultaSql(SELECT_FROM_PUBLIC_OPERADORA.concat(ORDER_BY_ID));
             while (rs.next()) {
                 operadoras.add(getItemRow(rs));
             }
@@ -63,7 +64,7 @@ public class ServicoOperadoraCRUD {
         validaCampoObrigatorio(operadora);
         String msgReturn = "Nenhum registro afetado!";
         String sql = "Delete from public.operadora ".concat(getSintaxeWhereId(operadora));
-        int qtdeRow = Conexao.executaSql(sql);
+        int qtdeRow = executaSql(sql);
         if (qtdeRow > 0)
             msgReturn = "Exclusão realizada com sucesso!";
 
@@ -90,7 +91,7 @@ public class ServicoOperadoraCRUD {
     private Operadora execSqlDbGetOperadora(String sql) {
         Operadora operadora = new Operadora();
         try {
-            ResultSet rs = Conexao.consultaSql(sql);
+            ResultSet rs = consultaSql(sql);
             rs.next();
             operadora = getItemRow(rs);
         } catch (SQLException e) {

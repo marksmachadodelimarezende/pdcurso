@@ -6,7 +6,9 @@ import core.db.UtilDB;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ServicoContatoCRUD extends UtilDB {
 
@@ -38,10 +40,15 @@ public class ServicoContatoCRUD extends UtilDB {
             while (rs.next()) {
                 contatos.add(getItemRow(rs));
             }
+            contatos = getContatosComOperadora(contatos);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return contatos;
+    }
+
+    private List<Contato> getContatosComOperadora(List<Contato> contatos) {
+        return new ServicoContatoProcessamento().incluirNomeOperadora(contatos);
     }
 
     //Update
@@ -59,18 +66,19 @@ public class ServicoContatoCRUD extends UtilDB {
     }
 
     //Delete
-    public String delete(Contato contato) throws Exception {
+    public Map<String, Object> delete(Contato contato) throws Exception {
         validaCampoObrigatorio(contato);
-        String msgReturn = "Nenhum registro afetado!";
+        Map<String, Object> msgReturn = new HashMap<>();
+        msgReturn.put("return", "Nenhum registro afetado!");
         String sql = "Delete from public.Contato ".concat(getSintaxeWhereId(contato));
         int qtdeRow = executaSql(sql);
         if (qtdeRow > 0)
-            msgReturn = "Exclusão realizada com sucesso!";
+            msgReturn.put("return", "Exclusão realizada com sucesso!");
 
         return msgReturn;
     }
 
-    public String deleteId(long id) throws Exception {
+    public Map<String, Object> deleteId(long id) throws Exception {
         Contato Contato = new Contato();
         Contato.setId(id);
         return delete(Contato);
@@ -108,7 +116,7 @@ public class ServicoContatoCRUD extends UtilDB {
         contato.setNome(rs.getString("nome"));
         contato.setTelefone(rs.getString("telefone"));
         contato.setIdOperadora(rs.getInt("id_operadora"));
-        contato.setDataInclusao(rs.getDate("data_inclusao"));
+        contato.setDataInclusao(rs.getTimestamp("data_inclusao"));
         return contato;
     }
 

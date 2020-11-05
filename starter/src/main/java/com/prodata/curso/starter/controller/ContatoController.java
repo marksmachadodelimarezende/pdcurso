@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/contatoController")
@@ -32,12 +33,12 @@ public class ContatoController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> delete(@RequestBody Contato contato) throws Exception {
-        return ResponseEntity.ok(new ServicoContatoCRUD().delete(contato));
+    public Map<String, Object> delete(@RequestBody Contato contato) throws Exception {
+        return new ServicoContatoCRUD().delete(contato);
     }
 
     @DeleteMapping("deleteId")
-    public ResponseEntity<String> deleteId(@RequestParam long id) throws Exception {
+    public ResponseEntity<Map<String, Object>> deleteId(@RequestParam long id) throws Exception {
         return ResponseEntity.ok(new ServicoContatoCRUD().deleteId(id));
     }
 }
