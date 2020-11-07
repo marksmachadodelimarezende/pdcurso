@@ -4,13 +4,21 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="bancoDeDados"/>
 	<property name="com.jaspersoft.studio.report.description" value="Relatório para listagem de contatos do pdCurso"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="444"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="551"/>
 	<parameter name="nome_empresa" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["NOME DA EMPRESA DO MEU CLIENTE"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="clausulaWhere" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["Where true'"]]></defaultValueExpression>
+	<parameter name="clausulaWhere" class="java.lang.String" nestedType="java.lang.String" evaluationTime="Early">
+		<defaultValueExpression><![CDATA["Where True"]]></defaultValueExpression>
 	</parameter>
-	<queryString language="SQL">
+	<parameter name="titulo" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Listagem de contatos"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="plsql">
 		<![CDATA[SELECT contato.id,
 	contato.nome,
 	contato.telefone,
@@ -21,10 +29,8 @@
 	operadora.categoria,
 	operadora.valor_minuto
 FROM contato
-	INNER JOIN operadora ON 
-	 contato.id_operadora = operadora.id
-	 
-	 Where contato.nome ilike '%a%']]>
+	INNER JOIN operadora ON contato.id_operadora = operadora.id
+$P!{clausulaWhere}]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -92,18 +98,18 @@ FROM contato
 				</textElement>
 				<textFieldExpression><![CDATA[$P{nome_empresa}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="0" y="19" width="555" height="19" uuid="0254386a-98aa-46aa-86af-1798ca6920c3"/>
+			<textField>
+				<reportElement x="0" y="19" width="555" height="19" uuid="5053b8c0-5ce9-420e-8a8d-d57efb401d0d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Listagem de contatos]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{titulo}]]></textFieldExpression>
+			</textField>
 			<image hAlign="Center" vAlign="Middle" isUsingCache="true" isLazy="true" onErrorType="Blank">
 				<reportElement x="8" y="0" width="50" height="50" uuid="34cae823-0df9-4700-8e3f-c1c41b31b51c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["/assets/logo_curso.png"]]></imageExpression>
+				<imageExpression><![CDATA["../assets/logo_curso.png"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -256,7 +262,7 @@ FROM contato
 	<summary>
 		<band height="30">
 			<textField>
-				<reportElement x="0" y="0" width="555" height="14" uuid="2d9ac268-6ac4-4637-90ad-caff09fd2a06">
+				<reportElement key="" x="0" y="0" width="555" height="14" uuid="2d9ac268-6ac4-4637-90ad-caff09fd2a06">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box leftPadding="2" rightPadding="2"/>
@@ -269,7 +275,7 @@ FROM contato
 					<subreportParameterExpression><![CDATA[$P{nome_empresa}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["gerencial/listaOperadoras.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"/listaOperadoras.jasper"]]></subreportExpression>
 			</subreport>
 		</band>
 	</summary>

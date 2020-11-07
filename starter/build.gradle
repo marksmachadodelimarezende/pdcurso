@@ -10,6 +10,7 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+	maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/" } //Precisa adicionar para dependencia do jasperreports
 }
 
 dependencies {
@@ -20,6 +21,8 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.apache.httpcomponents:httpclient' //Precisa adicionar esta dependencia para funcionamento de ambiente localhost, com frontend consultando na mesma origem o banckend
+
+	compile 'net.sf.jasperreports:jasperreports:6.15.0' //Precisa adicionar esta dependencia para Jasper - impressoes
 }
 
 test {
